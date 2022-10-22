@@ -109,6 +109,11 @@ export default class NewClass extends cc.Component {
         //         continue
         //     }
         // }
+        for (const key of this.selectArr) {
+            if(key == ''){
+                return;
+            }
+        }
         let randomIndex = MathUtil.getRandomInt(0,this.selectArr.length);
         if(this.selectArr[randomIndex] !== ''){
             this.steer.node.active = true
