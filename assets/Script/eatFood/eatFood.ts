@@ -6,6 +6,7 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import MathUtil from "../../eazax-ccc/utils/MathUtil";
+import ShowToast from "../control/ShowToast";
 
 const {ccclass, property} = cc._decorator;
 
@@ -111,6 +112,7 @@ export default class NewClass extends cc.Component {
         // }
         for (const key of this.selectArr) {
             if(key == ''){
+                // ShowToast.showToast(this.node,"至少输入一个想吃的吧")
                 return;
             }
         }
