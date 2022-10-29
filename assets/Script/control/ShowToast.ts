@@ -5,17 +5,21 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
+import EventManager from "../../eazax-ccc/core/EventManager";
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class ShowToast extends cc.Component {
+export default class ShowToast {
     @property(cc.Prefab)
     private notice : cc.Prefab = null
 
-    public showToast(node:cc.Node,str:string):void{
-        let toast = cc.instantiate(this.notice);
-        toast.getChildByName('str').getComponent(cc.Label).string = str
-        node.addChild(toast)
+
+    onLoad(){
     }
 
+    public static showToast(str:string):void{
+        console.log("aaa");
+        EventManager.emit("showToast",str)
+    }
 }

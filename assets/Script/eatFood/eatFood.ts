@@ -15,21 +15,20 @@ export default class NewClass extends cc.Component {
 
     @property(cc.Node)
     private content : cc.Node = null
-    @property(cc.EditBox)
-    private editbox : cc.EditBox[] = []
     @property(cc.Label)
     private steer : cc.Label = null
+    @property(cc.Prefab)
+    private foodPre : cc.Prefab = null
 
     private selectNum : number = 5;//选择的数量
     private selectArr : string[] = []
+    private editbox : any[] = []
+
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        // this.createEditx()
+        this.createEditx()
         this.mangerEditBox()
-        for(let i = 0;i<this.selectNum;i++){
-            this.selectArr.push('');
-        }
         this.steer.node.active = false
     }
 
@@ -42,14 +41,11 @@ export default class NewClass extends cc.Component {
      */
     private createEditx():void{
         for(let i = 1;i<=this.selectNum;i++){
-            let newEditx = new cc.Node();
-            newEditx.addComponent(cc.EditBox);
-            newEditx.width = 580;
-            newEditx.height = 40;
-            newEditx.name = "food"+i;
-            this.content.addChild(newEditx);
-            console.log("name = ",newEditx);
-            
+            let foods = cc.instantiate(this.foodPre)
+            foods.name = 'food'+i
+            this.content.addChild(foods)
+            foods.getChildByName('PLACEHOLDER_LABEL').getComponent(cc.Label).string = "输入你想吃的食物"
+            this.editbox.push(foods)
         }
     }
 
@@ -58,8 +54,8 @@ export default class NewClass extends cc.Component {
      */
     private mangerEditBox():void{
         for (const editBox of this.editbox) {
-             editBox.node.on('editing-did-began',this.editBoxStart,this);
-             editBox.node.on('editing-did-ended',this.EditBoxEnd,this)
+             editBox.on('editing-did-began',this.editBoxStart,this);
+             editBox.on('editing-did-ended',this.EditBoxEnd,this)
         }
     }
 
@@ -74,7 +70,6 @@ export default class NewClass extends cc.Component {
      * 监听输入框结束输入
      */
     private EditBoxEnd(e):void{
-        // console.log("输入的是哪个:",e);
         switch(e.node.name){
             case 'food1' : this.changeEditArr(0,e._string);break;
             case 'food2' : this.changeEditArr(1,e._string);break;
@@ -93,8 +88,7 @@ export default class NewClass extends cc.Component {
         if(str !== ''){
             this.selectArr[index] = str
         }else{
-            this.selectArr[index] = ''
-            
+            this.selectArr.splice(index,1)
         }
     }
 
@@ -110,11 +104,10 @@ export default class NewClass extends cc.Component {
         //         continue
         //     }
         // }
-        for (const key of this.selectArr) {
-            if(key == ''){
-                // ShowToast.showToast(this.node,"至少输入一个想吃的吧")
-                return;
-            }
+        console.log("arr = ",this.selectArr);
+        if(this.selectArr.length <= 0){
+            console.log("没有输入");
+            return;
         }
         let randomIndex = MathUtil.getRandomInt(0,this.selectArr.length);
         if(this.selectArr[randomIndex] !== ''){
